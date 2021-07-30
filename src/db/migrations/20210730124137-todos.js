@@ -6,7 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       // MAIN COLUMN
       title: {
@@ -32,8 +33,13 @@ module.exports = {
       },
       // RELATION
       created_by: {
-        allowNull: true,
-        type: Sequelize.STRING,
+        allowNull: false,
+        type: Sequelize.UUID,
+        onDelete: 'cascade',
+        references: {
+          model: 'users',
+          onDelete: 'cascade',
+        }
       },
       updated_by: {
         allowNull: true,

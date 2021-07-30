@@ -6,7 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       // MAIN COLUMN
       name: {
@@ -29,11 +30,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING(64)
       },
-      is_password_changed: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
       is_active: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
@@ -41,8 +37,8 @@ module.exports = {
       },
       // RELATION
       role_id: {
-        allowNull: false,
-        type: Sequelize.STRING,
+        allowNull: true,
+        type: Sequelize.UUID,
         onDelete: 'cascade',
         references: {
           model: 'roles',

@@ -6,7 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       // MAIN COLUMN
       name: {
@@ -36,7 +37,7 @@ module.exports = {
       },
       // RELATION
       parent_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         references: {
           model: 'accesses',
           onDelete: 'cascade',

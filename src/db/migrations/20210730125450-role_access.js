@@ -6,12 +6,13 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       // MAIN COLUMN
       role_id: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         onDelete: 'cascade',
         references: {
           model: 'roles',
@@ -20,7 +21,7 @@ module.exports = {
       },
       access_id: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         onDelete: 'cascade',
         references: {
           model: 'accesses',

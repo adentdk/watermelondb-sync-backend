@@ -6,7 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       // MAIN COLUMN
       title: {
@@ -21,12 +22,12 @@ module.exports = {
       // RELATION
       todo_id: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         onDelete: 'cascade',
         references: {
           model: 'todos',
           onDelete: 'cascade',
-        },
+        }
       },
       //
       created_at: {
