@@ -2,6 +2,7 @@
 
 import { Model, DataTypes } from 'sequelize'
 import db from '../index'
+import Role from './Role'
 import RoleAccess from './RoleAccess'
 
 export default class Access extends Model {}
@@ -41,9 +42,4 @@ Access.init({
   paranoid: true,
   timestamps: true,
   deletedAt: 'deleted_at'
-})
-
-Access.Roles = Access.belongsToMany(Roles, {
-  as: 'roles',
-  through: RoleAccess
 })
