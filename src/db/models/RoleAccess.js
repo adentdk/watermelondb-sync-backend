@@ -17,11 +17,3 @@ RoleAccess.init({}, {
   timestamps: true,
   deletedAt: 'deleted_at'
 })
-
-RoleAccess.Role = RoleAccess.belongsTo(Role, {
-  as: 'role'
-})
-
-RoleAccess.Access = RoleAccess.belongsTo(Access, {
-  as: 'access'
-})
