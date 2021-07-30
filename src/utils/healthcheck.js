@@ -40,7 +40,6 @@ const init = () => {
   serviceEnv.inc({environment: env})
 }
 
-
 export {
   updateServiceStatus,
   init

@@ -10,8 +10,6 @@ const app = start(config.node_env)
 const port = config.server.port
 const server = http.createServer(app)
 
-console.log(port)
-
 healthcheck.init()
 
 initSocket(server)
