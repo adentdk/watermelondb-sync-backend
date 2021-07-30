@@ -9,6 +9,7 @@ import { logger } from './utils/logger'
 import errorController from './http/errorController'
 
 import CorsConfig from './db/models/CorsConfig'
+import authRoutes from './http/v1/routes/auth'
 
 export function start(env) {
   logger.debug(`App running as ${env}`)
@@ -49,6 +50,7 @@ export function start(env) {
 
   // API BEGIN
   app.use('/', rootRoutes())
+  app.use('/v1/auth', authRoutes())
 
   app.use(errorController.notFound)
 
