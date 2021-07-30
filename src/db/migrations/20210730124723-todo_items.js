@@ -2,16 +2,31 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('cors_configs', {
+    await queryInterface.createTable('todo_items', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
       },
       // MAIN COLUMN
-      origin: {
+      title: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING(64)
+      },
+      is_done: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      // RELATION
+      todo_id: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        onDelete: 'cascade',
+        references: {
+          model: 'todos',
+          onDelete: 'cascade',
+        },
       },
       //
       created_at: {
@@ -42,6 +57,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('cors_configs')
+    await queryInterface.dropTable('todo_items')
   }
 };

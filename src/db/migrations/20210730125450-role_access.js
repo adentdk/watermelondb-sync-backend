@@ -2,16 +2,30 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('cors_configs', {
+    await queryInterface.createTable('role_access', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
       },
       // MAIN COLUMN
-      origin: {
+      role_id: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        onDelete: 'cascade',
+        references: {
+          model: 'roles',
+          onDelete: 'cascade',
+        },
+      },
+      access_id: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        onDelete: 'cascade',
+        references: {
+          model: 'accesses',
+          onDelete: 'cascade',
+        },
       },
       //
       created_at: {
@@ -42,6 +56,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('cors_configs')
+    await queryInterface.dropTable('role_access')
   }
 };

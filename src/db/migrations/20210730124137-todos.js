@@ -2,14 +2,18 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('cors_configs', {
+    await queryInterface.createTable('todos', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.STRING
       },
       // MAIN COLUMN
-      origin: {
+      title: {
+        allowNull: false,
+        type: Sequelize.STRING(64)
+      },
+      description: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -26,6 +30,7 @@ module.exports = {
         allowNull: true,
         type: Sequelize.DATE
       },
+      // RELATION
       created_by: {
         allowNull: true,
         type: Sequelize.STRING,
@@ -42,6 +47,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('cors_configs')
+    await queryInterface.dropTable('todos')
   }
 };
