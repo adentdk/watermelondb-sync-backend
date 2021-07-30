@@ -8,6 +8,8 @@ import { rootRoutes } from './http/rootRoutes'
 import { logger } from './utils/logger'
 import errorController from './http/errorController'
 
+import CorsConfig from './db/models/CorsConfig'
+
 export function start(env) {
   logger.debug(`App running as ${env}`)
   const app = express()
@@ -22,7 +24,13 @@ export function start(env) {
 
   // cors MIDDLEWARE
   app.use(cors({
-    origin: [],
+    origin: function (origin, callback) {
+      // db.loadOrigins is an example call to load
+      // a list of origins from a backing database
+      CorsConfig.findAll().then(configs => {
+        callback(null, configs.map(config => config.origin))
+      })
+    }
   }))
 
   // Public File
