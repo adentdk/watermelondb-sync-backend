@@ -1,12 +1,12 @@
-import os from 'os'
-import * as dotenv from 'dotenv'
-import serviceAccount from './serviceAccountKey.json'
+const os = require('os')
+const dotenv = require('dotenv')
+const serviceAccount = require('./serviceAccountKey.json')
 
 if (!process.env.USE_DOCKER) {
   dotenv.config()
 }
 
-export default {
+module.exports = {
   node_env: process.env.NODE_ENV,
   gold_api_url: process.env.GOLD_API_URL,
   gold_api_key: process.env.GOLD_API_KEY,
@@ -29,6 +29,7 @@ export default {
   },
   db: {
     user: process.env.DB_USER,
+    dialect: process.env.DB_DIALECT,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     host: process.env.DB_HOST,
