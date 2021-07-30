@@ -8,12 +8,13 @@ const strings = {
   success: 'Login Success',
   error: 'Login Failed',
   invalid: 'Username or Password is incorrect',
-  errorRequired: 'this field is required'
+  errorRequired: 'this field is required',
+  errorMinLength: 'minimum character is 1 and maximum 32'
 }
 
 export const validationRules = [
-  body('username').exists().withMessage(strings.errorRequired),
-  body('password').exists().withMessage(strings.errorRequired)
+  body('username').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 32}),
+  body('password').exists().withMessage(strings.errorRequired).isLength({min: 6, max: 32})
 ]
 
 export const execute = async (req, res) => {

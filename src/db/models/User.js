@@ -28,7 +28,10 @@ User.init({
   },
   password: {
     allowNull: false,
-    type: DataTypes.STRING(64)
+    type: DataTypes.STRING(64),
+    set(value) {
+      this.setDataValue('password', bcrypt.hash(value))
+    }
   },
   is_active: {
     allowNull: false,
@@ -76,14 +79,7 @@ User.init({
   
 })
 
-User.beforeCreate(user => {
-  
-  user.id = uuid()
-  user.password = bcrypt.hash(user.password)
-
-  return user
-
-})
+User.beforeCreate(user => user.id = uuid())
 
 User.Role = User.belongsTo(Role, {
   as: 'role'

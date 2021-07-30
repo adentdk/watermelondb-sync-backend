@@ -13,7 +13,7 @@ const strings = {
 }
 
 export const validationRules = [
-  body('name').exists().withMessage(strings.errorRequired),
+  body('name').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 15}),
   body('username')
     .exists()
     .withMessage(strings.errorRequired)
@@ -34,8 +34,8 @@ export const validationRules = [
       }
 
     })
-    .withMessage(strings.invalid),
-  body('password').exists().withMessage(strings.errorRequired),
+    .withMessage(strings.invalid).isLength({min: 1, max: 32}),
+  body('password').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 32}),
 ]
 
 export const execute = async (req, res) => {
