@@ -9,14 +9,19 @@ const strings = {
   success: 'Register success',
   error: 'Register failed',
   invalid: 'Username is already taken',
-  errorRequired: 'this field is required'
 }
 
 export const validationRules = [
-  body('name').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 15}),
+  body('name')
+    .exists()
+    .withMessage('Name is required')
+    .bail()
+    .isLength({min: 1, max: 32})
+    .withMessage('Name must be between 1 and 32 characters long'),
   body('username')
     .exists()
-    .withMessage(strings.errorRequired)
+    .withMessage('Username is required')
+    .bail()
     .custom(async (value) => {
       try {
         if (value) {
@@ -34,8 +39,28 @@ export const validationRules = [
       }
 
     })
-    .withMessage(strings.invalid).isLength({min: 1, max: 32}),
-  body('password').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 32}),
+    .withMessage('Username is already taken')
+    .bail()
+    .isLength({min: 3, max: 32})
+    .withMessage('Username must be between 3 and 32 characters long'),
+  body('password')
+    .exists()
+    .withMessage('Password is Required')
+    .bail()
+    .isLength({min: 6, max: 15})
+    .withMessage('Password must be between 6 and 15 characters long'),
+  body('confirm_password')
+    .exists()
+    .withMessage('Confirm Password is required')
+    .bail()
+    .custom((value, {req}) => {
+      if (value === req.body.password) {
+        return Promise.resolve(true)
+      }
+
+      return Promise.reject()
+    })
+    .withMessage('Password doesn\'t match')
 ]
 
 export const execute = async (req, res) => {

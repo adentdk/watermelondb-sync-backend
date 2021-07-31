@@ -1,57 +1,85 @@
 import User from "@src/db/models/User"
 import bcrypt from "@src/utils/bcrypt"
+import { logger } from "@src/utils/logger"
 import { body } from "express-validator"
 import { StatusCodes } from "http-status-codes"
 
 const strings = {
   success: 'Change Password success',
   error: 'Change Password failed',
-  invalid: 'old password doesn\'t match',
-  errorRequired: 'this field is required'
 }
 
 export const validationRules = [
-  body('new_password').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 32}),
-  body('old_password').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 32})
+  body('old_password')
+    .exists()
+    .withMessage('Old Password is required')
+    .bail()
+    .isLength({ min: 6, max: 15 })
+    .withMessage('Old Password must be between 6 and 15 characters long')
+    .custom(async (value, { req }) => {
+      const { uid: userID } = req.auth;
+      try {
+        if (value) {
+          const user = await User.findByPk(userID)
+          if (user === null) {
+            throw new Error()
+          }
+
+          const isPasswordMatch = bcrypt.compare(value, user.password)
+
+          if (isPasswordMatch) {
+            return Promise.resolve();
+          } else {
+            throw new Error()
+          }
+
+        } else {
+          throw new Error()
+        }
+      } catch (error) {
+        return Promise.reject()
+      }
+    })
+    .withMessage('Old Password doesn\'t match'),
+  body('new_password')
+    .exists()
+    .withMessage('New Password is required')
+    .bail()
+    .isLength({ min: 6, max: 15 })
+    .withMessage('New Password must be between 6 and 15 characters long'),
+  body('confirm_password')
+    .exists()
+    .withMessage('Confirm Password is required')
+    .bail()
+    .custom((value, { req }) => {
+      if (value === req.body.new_password) {
+        return Promise.resolve(true)
+      }
+
+      return Promise.reject()
+    })
+    .withMessage('New Password doesn\'t match')
+    .isLength({ min: 6, max: 15 })
+    .withMessage('Confirm Password must be between 6 and 15 characters long'),
 ]
 
-export const execute = (req, res) => {
+export const execute = async (req, res) => {
   const {
-    new_password,
-    old_password
+    new_password
   } = req.body
 
-  const {uid: userID} = req.auth;
-
+  const { uid: userID } = req.auth;
   try {
     const user = await User.findByPk(userID)
+    user.password = new_password
 
-    const isPasswordMatch = bcrypt.compare(old_password, user.password);
-    if (isPasswordMatch) {
-      user.password = new_password
+    await user.save();
 
-      await user.save();
-      
-      return res.status(StatusCodes.OK).json({
-        message: strings.success,
-      }).end()
-    } else {
-      throw {
-        message: strings.invalid
-      }
-    }
+    return res.status(StatusCodes.OK).json({
+      message: strings.success,
+    }).end()
   } catch (error) {
-    logger.error(error.message);
-    if (error.message === strings.invalid) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: strings.error,
-        errors: [{
-          param: '_global',
-          message: error.message
-        }]
-      }).end()
-    } else {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end()
-    }
+    logger.error(error.message)
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end()
   }
 }

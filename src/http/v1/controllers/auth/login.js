@@ -1,6 +1,7 @@
 import User from "@src/db/models/User";
 import bcrypt from "@src/utils/bcrypt";
 import jwt from "@src/utils/jwt";
+import { logger } from "@src/utils/logger";
 import { body } from "express-validator";
 import { StatusCodes } from "http-status-codes";
 
@@ -13,8 +14,18 @@ const strings = {
 }
 
 export const validationRules = [
-  body('username').exists().withMessage(strings.errorRequired).isLength({min: 1, max: 32}),
-  body('password').exists().withMessage(strings.errorRequired).isLength({min: 6, max: 32})
+  body('username')
+    .exists()
+    .withMessage(strings.errorRequired)
+    .bail()
+    .isLength({min: 3, max: 32})
+    .withMessage('Username must be between 3 and 32 characters long'),
+  body('password')
+    .exists()
+    .withMessage(strings.errorRequired)
+    .bail()
+    .isLength({min: 6, max: 32})
+    .withMessage('Password must be between 6 and 32 characters long'),
 ]
 
 export const execute = async (req, res) => {
@@ -62,7 +73,7 @@ export const execute = async (req, res) => {
     }
 
   } catch (error) {
-
+    logger.error(error.log)
     if (error.message === strings.invalid) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: strings.error,

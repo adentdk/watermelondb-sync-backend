@@ -1,4 +1,5 @@
 import Role from "@src/db/models/Role";
+import { logger } from "@src/utils/logger";
 import { StatusCodes } from "http-status-codes";
 
 const strings = {
@@ -28,7 +29,7 @@ export const execute = async (req, res) => {
     }).end()
 
   } catch (error) {
-
+    logger(error.message)
     if (error.message === strings.invalid) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         message: strings.error,
