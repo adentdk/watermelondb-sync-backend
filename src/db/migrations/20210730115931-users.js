@@ -12,7 +12,7 @@ module.exports = {
       // MAIN COLUMN
       name: {
         allowNull: false,
-        type: Sequelize.STRING(15)
+        type: Sequelize.STRING(32)
       },
       username: {
         allowNull: false,

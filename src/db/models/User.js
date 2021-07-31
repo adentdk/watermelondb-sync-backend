@@ -12,7 +12,7 @@ export default class User extends Model {}
 User.init({
   name: {
     allowNull: false,
-    type: DataTypes.STRING(15)
+    type: DataTypes.STRING(32)
   },
   username: {
     allowNull: false,
