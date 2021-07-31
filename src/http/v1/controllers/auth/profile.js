@@ -10,7 +10,7 @@ const strings = {
 
 export const execute = async (req, res) => {
   const {
-    id: userID,
+    uid: userID,
   } = req.auth;
 
 
